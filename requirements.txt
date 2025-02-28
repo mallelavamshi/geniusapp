@@ -1,0 +1,8 @@
+streamlit
+pillow
+requests
+pandas
+xlsxwriter
+anthropic
+python-dotenv
+openpyxl==3.1.2

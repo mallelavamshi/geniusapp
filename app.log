@@ -1,0 +1,183 @@
+2025-02-24 17:20:46,568 - app - INFO - Application started at 2025-02-24 17:20:46.568183
+2025-02-24 17:20:53,317 - app - INFO - Application started at 2025-02-24 17:20:53.317136
+2025-02-24 17:20:55,070 - app - INFO - Application started at 2025-02-24 17:20:55.070623
+2025-02-24 17:20:59,433 - app - INFO - Application started at 2025-02-24 17:20:59.433192
+2025-02-24 17:20:59,643 - app - INFO - Application started at 2025-02-24 17:20:59.643961
+2025-02-24 17:21:03,624 - app - INFO - Application started at 2025-02-24 17:21:03.624172
+2025-02-24 17:21:06,400 - app - INFO - Application started at 2025-02-24 17:21:06.400965
+2025-02-24 17:21:06,624 - app - INFO - Application started at 2025-02-24 17:21:06.624044
+2025-02-24 17:26:42,154 - app - INFO - Application started at 2025-02-24 17:26:42.154845
+2025-02-24 17:26:45,848 - app - INFO - Application started at 2025-02-24 17:26:45.848464
+2025-02-24 17:26:48,378 - app - INFO - Application started at 2025-02-24 17:26:48.378649
+2025-02-24 17:26:48,574 - app - INFO - Application started at 2025-02-24 17:26:48.574368
+2025-02-24 17:26:48,680 - app - INFO - Application started at 2025-02-24 17:26:48.679956
+2025-02-24 17:26:54,246 - app - INFO - Application started at 2025-02-24 17:26:54.246746
+2025-02-24 17:26:54,369 - app - INFO - Application started at 2025-02-24 17:26:54.369470
+2025-02-24 17:27:08,517 - app - INFO - Application started at 2025-02-24 17:27:08.517128
+2025-02-24 17:27:14,498 - app - INFO - Application started at 2025-02-24 17:27:14.498249
+2025-02-24 17:27:14,712 - app - INFO - Application started at 2025-02-24 17:27:14.712579
+2025-02-24 17:27:35,341 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 17:27:56,318 - app - INFO - Application started at 2025-02-24 17:27:56.318720
+2025-02-24 17:28:08,669 - app - INFO - Application started at 2025-02-24 17:28:08.669852
+2025-02-24 17:28:08,905 - app - INFO - Application started at 2025-02-24 17:28:08.905285
+2025-02-24 17:28:22,150 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 17:28:57,943 - app - INFO - Application started at 2025-02-24 17:28:57.943427
+2025-02-24 17:28:58,073 - app - INFO - Application started at 2025-02-24 17:28:58.073823
+2025-02-24 17:29:08,781 - app - INFO - Application started at 2025-02-24 17:29:08.781493
+2025-02-24 17:29:08,917 - app - INFO - Application started at 2025-02-24 17:29:08.917133
+2025-02-24 17:29:33,877 - app - INFO - Application started at 2025-02-24 17:29:33.877284
+2025-02-24 17:29:40,448 - app - INFO - Application started at 2025-02-24 17:29:40.448761
+2025-02-24 17:29:40,660 - app - INFO - Application started at 2025-02-24 17:29:40.660645
+2025-02-24 17:29:40,824 - app - INFO - Application started at 2025-02-24 17:29:40.824315
+2025-02-24 17:30:00,269 - app - INFO - Application started at 2025-02-24 17:30:00.269283
+2025-02-24 17:30:03,966 - app - INFO - Application started at 2025-02-24 17:30:03.966422
+2025-02-24 17:30:27,644 - app - INFO - Application started at 2025-02-24 17:30:27.644242
+2025-02-24 17:30:40,438 - app - INFO - Application started at 2025-02-24 17:30:40.438773
+2025-02-24 17:30:46,466 - app - INFO - Application started at 2025-02-24 17:30:46.466552
+2025-02-24 17:30:46,700 - app - INFO - Application started at 2025-02-24 17:30:46.699983
+2025-02-24 17:30:46,894 - app - INFO - Application started at 2025-02-24 17:30:46.894062
+2025-02-24 17:30:50,475 - app - INFO - Application started at 2025-02-24 17:30:50.475595
+2025-02-24 17:30:50,808 - app - INFO - Application started at 2025-02-24 17:30:50.808038
+2025-02-24 17:31:06,862 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 17:31:23,192 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 17:47:31,869 - app - INFO - Application started at 2025-02-24 17:47:31.869071
+2025-02-24 17:47:36,163 - app - INFO - Application started at 2025-02-24 17:47:36.163885
+2025-02-24 17:47:39,018 - app - INFO - Application started at 2025-02-24 17:47:39.018537
+2025-02-24 17:47:39,249 - app - INFO - Application started at 2025-02-24 17:47:39.249839
+2025-02-24 17:47:39,372 - app - INFO - Application started at 2025-02-24 17:47:39.372785
+2025-02-24 17:47:42,084 - app - INFO - Application started at 2025-02-24 17:47:42.084959
+2025-02-24 17:47:42,172 - app - INFO - Application started at 2025-02-24 17:47:42.172584
+2025-02-24 17:47:51,976 - app - INFO - Application started at 2025-02-24 17:47:51.976641
+2025-02-24 17:47:56,450 - app - INFO - Application started at 2025-02-24 17:47:56.450299
+2025-02-24 17:47:56,661 - app - INFO - Application started at 2025-02-24 17:47:56.661118
+2025-02-24 17:48:19,234 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 17:48:19,250 - processing - ERROR - Error processing image 5: name 'config' is not defined
+2025-02-24 17:49:44,114 - app - INFO - Application started at 2025-02-24 17:49:44.114627
+2025-02-24 17:49:47,404 - app - INFO - Application started at 2025-02-24 17:49:47.404630
+2025-02-24 17:49:50,479 - app - INFO - Application started at 2025-02-24 17:49:50.479131
+2025-02-24 17:49:50,686 - app - INFO - Application started at 2025-02-24 17:49:50.686349
+2025-02-24 17:49:50,774 - app - INFO - Application started at 2025-02-24 17:49:50.774718
+2025-02-24 17:49:53,507 - app - INFO - Application started at 2025-02-24 17:49:53.507207
+2025-02-24 17:49:53,593 - app - INFO - Application started at 2025-02-24 17:49:53.592988
+2025-02-24 17:49:59,909 - app - INFO - Application started at 2025-02-24 17:49:59.909670
+2025-02-24 17:50:04,792 - app - INFO - Application started at 2025-02-24 17:50:04.792490
+2025-02-24 17:50:05,019 - app - INFO - Application started at 2025-02-24 17:50:05.019909
+2025-02-24 17:50:14,984 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 17:51:48,685 - app - INFO - Application started at 2025-02-24 17:51:48.685773
+2025-02-24 17:51:48,835 - app - INFO - Application started at 2025-02-24 17:51:48.835453
+2025-02-24 17:51:50,874 - app - INFO - Application started at 2025-02-24 17:51:50.874909
+2025-02-24 17:51:50,966 - app - INFO - Application started at 2025-02-24 17:51:50.966185
+2025-02-24 17:52:01,688 - app - INFO - Application started at 2025-02-24 17:52:01.688260
+2025-02-24 17:52:13,266 - app - INFO - Application started at 2025-02-24 17:52:13.266069
+2025-02-24 17:52:13,485 - app - INFO - Application started at 2025-02-24 17:52:13.485681
+2025-02-24 17:52:13,669 - app - INFO - Application started at 2025-02-24 17:52:13.669405
+2025-02-24 17:52:16,215 - app - INFO - Application started at 2025-02-24 17:52:16.215237
+2025-02-24 17:52:23,243 - app - INFO - Application started at 2025-02-24 17:52:23.243890
+2025-02-24 17:52:30,441 - app - INFO - Application started at 2025-02-24 17:52:30.441558
+2025-02-24 17:52:30,670 - app - INFO - Application started at 2025-02-24 17:52:30.670177
+2025-02-24 17:52:30,801 - app - INFO - Application started at 2025-02-24 17:52:30.801705
+2025-02-24 17:52:32,314 - app - INFO - Application started at 2025-02-24 17:52:32.314136
+2025-02-24 17:52:35,139 - app - INFO - Application started at 2025-02-24 17:52:35.139665
+2025-02-24 17:52:35,299 - app - INFO - Application started at 2025-02-24 17:52:35.299051
+2025-02-24 17:52:46,579 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 17:52:56,289 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 17:56:13,874 - app - INFO - Application started at 2025-02-24 17:56:13.874531
+2025-02-24 17:56:17,567 - app - INFO - Application started at 2025-02-24 17:56:17.567297
+2025-02-24 17:56:20,514 - app - INFO - Application started at 2025-02-24 17:56:20.514723
+2025-02-24 17:56:20,723 - app - INFO - Application started at 2025-02-24 17:56:20.723741
+2025-02-24 17:56:20,838 - app - INFO - Application started at 2025-02-24 17:56:20.838036
+2025-02-24 17:56:28,266 - app - INFO - Application started at 2025-02-24 17:56:28.266482
+2025-02-24 19:06:22,332 - app - INFO - Application started at 2025-02-24 19:06:22.332268
+2025-02-24 19:06:26,417 - app - INFO - Application started at 2025-02-24 19:06:26.417093
+2025-02-24 19:06:29,474 - app - INFO - Application started at 2025-02-24 19:06:29.474448
+2025-02-24 19:06:29,691 - app - INFO - Application started at 2025-02-24 19:06:29.691901
+2025-02-24 19:06:29,798 - app - INFO - Application started at 2025-02-24 19:06:29.798804
+2025-02-24 19:06:36,735 - app - INFO - Application started at 2025-02-24 19:06:36.735178
+2025-02-24 19:06:36,824 - app - INFO - Application started at 2025-02-24 19:06:36.824882
+2025-02-24 19:06:50,440 - app - INFO - Application started at 2025-02-24 19:06:50.440305
+2025-02-24 19:06:57,318 - app - INFO - Application started at 2025-02-24 19:06:57.318541
+2025-02-24 19:07:17,478 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 19:08:09,377 - app - INFO - Application started at 2025-02-24 19:08:09.377414
+2025-02-24 19:08:15,146 - app - INFO - Application started at 2025-02-24 19:08:15.146691
+2025-02-24 19:08:19,522 - app - INFO - Application started at 2025-02-24 19:08:19.522420
+2025-02-24 19:08:33,232 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 22:48:08,265 - app - INFO - Application started at 2025-02-24 22:48:08.265369
+2025-02-24 22:48:12,249 - app - INFO - Application started at 2025-02-24 22:48:12.248994
+2025-02-24 22:48:14,968 - app - INFO - Application started at 2025-02-24 22:48:14.968233
+2025-02-24 22:48:15,169 - app - INFO - Application started at 2025-02-24 22:48:15.169403
+2025-02-24 22:48:15,273 - app - INFO - Application started at 2025-02-24 22:48:15.273848
+2025-02-24 22:48:30,530 - app - INFO - Application started at 2025-02-24 22:48:30.530783
+2025-02-24 22:48:30,653 - app - INFO - Application started at 2025-02-24 22:48:30.653651
+2025-02-24 22:48:38,435 - app - INFO - Application started at 2025-02-24 22:48:38.435139
+2025-02-24 22:49:24,204 - app - INFO - Application started at 2025-02-24 22:49:24.204273
+2025-02-24 22:49:30,790 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 22:50:04,982 - app - INFO - Application started at 2025-02-24 22:50:04.982094
+2025-02-24 22:50:09,361 - app - INFO - Application started at 2025-02-24 22:50:09.361464
+2025-02-24 22:50:12,421 - app - INFO - Application started at 2025-02-24 22:50:12.421572
+2025-02-24 22:50:12,646 - app - INFO - Application started at 2025-02-24 22:50:12.646810
+2025-02-24 22:50:12,741 - app - INFO - Application started at 2025-02-24 22:50:12.741474
+2025-02-24 22:50:15,537 - app - INFO - Application started at 2025-02-24 22:50:15.536999
+2025-02-24 22:50:15,621 - app - INFO - Application started at 2025-02-24 22:50:15.621918
+2025-02-24 22:50:20,843 - app - INFO - Application started at 2025-02-24 22:50:20.843716
+2025-02-24 22:50:25,061 - app - INFO - Application started at 2025-02-24 22:50:25.061778
+2025-02-24 22:50:34,957 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 22:53:39,873 - app - INFO - Application started at 2025-02-24 22:53:39.873160
+2025-02-24 22:53:43,616 - app - INFO - Application started at 2025-02-24 22:53:43.616311
+2025-02-24 22:53:46,361 - app - INFO - Application started at 2025-02-24 22:53:46.360986
+2025-02-24 22:53:46,560 - app - INFO - Application started at 2025-02-24 22:53:46.560227
+2025-02-24 22:53:46,659 - app - INFO - Application started at 2025-02-24 22:53:46.659799
+2025-02-24 22:53:50,609 - app - INFO - Application started at 2025-02-24 22:53:50.609959
+2025-02-24 22:53:50,699 - app - INFO - Application started at 2025-02-24 22:53:50.699030
+2025-02-24 22:53:55,532 - app - INFO - Application started at 2025-02-24 22:53:55.531937
+2025-02-24 22:53:58,647 - app - INFO - Application started at 2025-02-24 22:53:58.647363
+2025-02-24 22:54:07,996 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 22:54:09,660 - app - INFO - Application started at 2025-02-24 22:54:09.659965
+2025-02-24 22:54:09,795 - app - INFO - Application started at 2025-02-24 22:54:09.795881
+2025-02-24 22:54:30,775 - app - INFO - Application started at 2025-02-24 22:54:30.775204
+2025-02-24 22:54:30,851 - app - INFO - Application started at 2025-02-24 22:54:30.851153
+2025-02-24 22:54:51,286 - app - INFO - Application started at 2025-02-24 22:54:51.286164
+2025-02-24 22:54:56,022 - app - INFO - Application started at 2025-02-24 22:54:56.022364
+2025-02-24 22:55:05,775 - app - INFO - Application started at 2025-02-24 22:55:05.775363
+2025-02-24 22:55:09,569 - app - INFO - Application started at 2025-02-24 22:55:09.569440
+2025-02-24 22:55:09,782 - app - INFO - Application started at 2025-02-24 22:55:09.782532
+2025-02-24 22:55:13,752 - app - INFO - Application started at 2025-02-24 22:55:13.752891
+2025-02-24 22:55:21,016 - app - INFO - Application started at 2025-02-24 22:55:21.016130
+2025-02-24 22:55:22,761 - app - INFO - Application started at 2025-02-24 22:55:22.761386
+2025-02-24 22:55:23,026 - app - INFO - Application started at 2025-02-24 22:55:23.026523
+2025-02-24 22:55:27,265 - app - INFO - Application started at 2025-02-24 22:55:27.265376
+2025-02-24 22:55:27,476 - app - INFO - Application started at 2025-02-24 22:55:27.476881
+2025-02-24 22:55:39,838 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 22:55:52,501 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 22:56:14,697 - app - INFO - Application started at 2025-02-24 22:56:14.697793
+2025-02-24 22:56:18,207 - app - INFO - Application started at 2025-02-24 22:56:18.207883
+2025-02-24 22:56:20,813 - app - INFO - Application started at 2025-02-24 22:56:20.813872
+2025-02-24 22:56:21,023 - app - INFO - Application started at 2025-02-24 22:56:21.023652
+2025-02-24 22:56:21,128 - app - INFO - Application started at 2025-02-24 22:56:21.128735
+2025-02-24 22:56:27,964 - app - INFO - Application started at 2025-02-24 22:56:27.964679
+2025-02-24 23:29:01,789 - app - INFO - Application started at 2025-02-24 23:29:01.789295
+2025-02-24 23:29:02,907 - app - INFO - Application started at 2025-02-24 23:29:02.907739
+2025-02-24 23:31:17,137 - app - INFO - Application started at 2025-02-24 23:31:17.137316
+2025-02-24 23:31:19,658 - app - INFO - Application started at 2025-02-24 23:31:19.658376
+2025-02-24 23:31:19,888 - app - INFO - Application started at 2025-02-24 23:31:19.888745
+2025-02-24 23:31:19,976 - app - INFO - Application started at 2025-02-24 23:31:19.975963
+2025-02-24 23:32:28,514 - app - INFO - Application started at 2025-02-24 23:32:28.514820
+2025-02-24 23:32:28,597 - app - INFO - Application started at 2025-02-24 23:32:28.597009
+2025-02-24 23:33:22,083 - app - INFO - Application started at 2025-02-24 23:33:22.083689
+2025-02-24 23:33:49,059 - app - INFO - Application started at 2025-02-24 23:33:49.059175
+2025-02-24 23:33:49,286 - app - INFO - Application started at 2025-02-24 23:33:49.286646
+2025-02-24 23:33:49,472 - app - INFO - Application started at 2025-02-24 23:33:49.472396
+2025-02-24 23:35:17,118 - app - INFO - Application started at 2025-02-24 23:35:17.118468
+2025-02-24 23:35:25,292 - app - INFO - Application started at 2025-02-24 23:35:25.291992
+2025-02-24 23:35:34,024 - app - INFO - Application started at 2025-02-24 23:35:34.024579
+2025-02-24 23:35:34,245 - app - INFO - Application started at 2025-02-24 23:35:34.245072
+2025-02-24 23:35:34,399 - app - INFO - Application started at 2025-02-24 23:35:34.399273
+2025-02-24 23:35:36,547 - app - INFO - Application started at 2025-02-24 23:35:36.547652
+2025-02-24 23:41:42,843 - app - INFO - Application started at 2025-02-24 23:41:42.843651
+2025-02-24 23:41:43,123 - app - INFO - Application started at 2025-02-24 23:41:43.123768
+2025-02-24 23:41:59,606 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 23:42:12,133 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-02-24 23:44:33,146 - app - INFO - Application started at 2025-02-24 23:44:33.146218
+2025-02-24 23:44:33,276 - app - INFO - Application started at 2025-02-24 23:44:33.276757
+2025-02-24 23:44:37,708 - app - INFO - Application started at 2025-02-24 23:44:37.708019
+2025-02-24 23:44:37,824 - app - INFO - Application started at 2025-02-24 23:44:37.824254
+2025-02-24 23:44:43,627 - app - INFO - Application started at 2025-02-24 23:44:43.627008
