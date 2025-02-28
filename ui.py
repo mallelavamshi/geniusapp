@@ -98,40 +98,6 @@ def login_page():
     # Close the login container div
     st.markdown('</div>', unsafe_allow_html=True)
 
-def display_formatted_analysis(analysis_text):
-    """Display the analysis in a formatted way with proper text color"""
-    # Import colors from config
-    from config import COLOR_THEME as colors
-    
-    if not analysis_text:
-        st.info("No analysis available.")
-        return
-    
-    # Wrap the entire analysis in a div with styling using the config color
-    st.markdown(f'<div class="analysis-results" style="color: {colors["ANALYSIS_TEXT_COLOR"]};">', unsafe_allow_html=True)
-    
-    # Handle the raw analysis string properly
-    lines = analysis_text.split('\n')
-    current_section = None
-    
-    for line in lines:
-        # Check if this is a section header (all caps followed by colon)
-        if line.strip().upper() == line.strip() and ':' in line:
-            current_section = line.strip()
-            # Display section headers with the analysis color, not the heading color
-            st.markdown(f'<h3 style="color: {colors["ANALYSIS_TEXT_COLOR"]};">{current_section}</h3>', unsafe_allow_html=True)
-        
-        # Check if this is a bullet point
-        elif line.strip().startswith('- '):
-            st.markdown(f'<p style="color: {colors["ANALYSIS_TEXT_COLOR"]};">{line}</p>', unsafe_allow_html=True)
-        
-        # Regular text line
-        elif line.strip():
-            st.markdown(f'<p style="color: {colors["ANALYSIS_TEXT_COLOR"]};">{line}</p>', unsafe_allow_html=True)
-    
-    # Close the wrapper div
-    st.markdown('</div>', unsafe_allow_html=True)
-
 def home_page():
     """Render the home page with task selection and user information in header"""
     # Display user information in the header
@@ -141,40 +107,65 @@ def home_page():
     user_info = db.get_user_info(st.session_state.user_id)
     username = user_info["username"] if user_info else f"User #{st.session_state.user_id}"
     
-    # More aggressive CSS to force width of expanded content
+    # More aggressive CSS to force width of expanded content and make responsive
     st.markdown("""
     <style>
     /* Basic centered content */
     .centered-content {
-        max-width: 400px;
+        max-width: 100%;
         margin: 0 auto;
         text-align: center;
     }
+    
+    @media (min-width: 768px) {
+        .centered-content {
+            max-width: 400px;
+        }
+    }
+    
     .centered-title {
         text-align: center;
         margin-bottom: 1rem;
     }
     
-    /* Make task buttons exactly 400px wide */
+    /* Make task buttons responsive */
     div[data-testid="stExpander"] {
-        width: 400px !important;
-        max-width: 400px !important;
-        min-width: 400px !important;
+        width: 100% !important;
+        max-width: 100% !important;
         margin: 0 auto !important;
     }
     
-    /* Force expanded content to be 800px wide */
+    @media (min-width: 768px) {
+        div[data-testid="stExpander"] {
+            width: 400px !important;
+            max-width: 400px !important;
+        }
+    }
+    
+    /* Force expanded content to be full width on mobile, 800px on desktop */
     div[data-testid="stExpander"][aria-expanded="true"] {
-        width: 800px !important; 
-        max-width: 800px !important;
-        min-width: 800px !important;
+        width: 100% !important; 
+        max-width: 100% !important;
+    }
+    
+    @media (min-width: 768px) {
+        div[data-testid="stExpander"][aria-expanded="true"] {
+            width: 800px !important; 
+            max-width: 800px !important;
+        }
     }
     
     /* Crucial fix: Force the content div inside expanded expander to be wider */
     div[data-testid="stExpander"][aria-expanded="true"] > div:nth-child(2) {
-        width: 800px !important;
-        max-width: 800px !important;
-        min-width: 800px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    @media (min-width: 768px) {
+        div[data-testid="stExpander"][aria-expanded="true"] > div:nth-child(2) {
+            width: 800px !important;
+            max-width: 800px !important;
+        }
     }
     
     /* Remove space between task buttons */
@@ -198,18 +189,49 @@ def home_page():
     
     /* Force the content columns to use appropriate width */
     div[data-testid="stExpander"][aria-expanded="true"] [data-testid="column"] {
-        width: 390px !important;
-        max-width: 390px !important;
-        min-width: 390px !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    @media (min-width: 768px) {
+        div[data-testid="stExpander"][aria-expanded="true"] [data-testid="column"] {
+            width: 390px !important;
+            max-width: 390px !important;
+        }
+    }
+    
+    /* Stack image and analysis columns on mobile */
+    @media (max-width: 767px) {
+        div[data-testid="stExpander"] [data-testid="column"] {
+            display: block !important;
+            width: 100% !important;
+        }
     }
     
     /* Fix layout for image and analysis columns */
     .image-column, .analysis-column {
-        width: 390px !important;
-        max-width: 390px !important;
+        width: 100% !important;
+        max-width: 100% !important;
         padding: 5px !important;
     }
     
+    @media (min-width: 768px) {
+        .image-column, .analysis-column {
+            width: 390px !important;
+            max-width: 390px !important;
+        }
+    }
+    
+    /* Make images responsive within task history */
+    div[data-testid="stImage"] {
+        max-width: 100% !important;
+    }
+    
+    div[data-testid="stImage"] img {
+        max-width: 100% !important;
+        height: auto !important;
+        object-fit: contain !important;
+    }
     </style>
     """, unsafe_allow_html=True)
     
@@ -344,23 +366,21 @@ def home_page():
                         # Always display results header
                         st.subheader("Results")
                         
-                        # Display results in a table
+                        # Mobile-first approach: on mobile devices, stack images and analysis
                         for i, img in enumerate(images_df.itertuples()):
                             # Add a separator between images
                             if i > 0:
                                 st.markdown("---")
                             
-                            # Add a div with full width
-                            st.markdown('<div style="width:800px; max-width:800px; display:flex;">', unsafe_allow_html=True)
-                            
-                            # Create a two-column layout for image and analysis
+                            # Use columns for desktop but stack for mobile
                             col1, col2 = st.columns(2)
                             
                             with col1:
                                 st.markdown('<div class="image-column">', unsafe_allow_html=True)
                                 try:
                                     image = Image.open(img.image_path)
-                                    st.image(image, width=380)
+                                    # Use column width instead of fixed width for responsiveness
+                                    st.image(image, use_column_width=True)
                                     st.write(f"**Description:** {img.description if img.description else 'None'}")
                                 except Exception as e:
                                     st.error(f"Error loading image: {e}")
@@ -375,9 +395,6 @@ def home_page():
                                 else:
                                     st.info("No analysis available")
                                 st.markdown('</div>', unsafe_allow_html=True)
-                            
-                            # Close the full width div
-                            st.markdown('</div>', unsafe_allow_html=True)
                     
                     # Display delete task button
                     def set_delete_task(task_id, task_name):
@@ -394,8 +411,8 @@ def home_page():
                 task_id = st.session_state.confirm_delete_task
                 task_name = st.session_state.confirm_delete_name
                 
-                # Show confirmation dialog in a centered container
-                st.markdown('<div style="max-width: 400px; margin: 0 auto;">', unsafe_allow_html=True)
+                # Show confirmation dialog in a centered container - responsive
+                st.markdown('<div style="max-width: 100%; margin: 0 auto;">', unsafe_allow_html=True)
                 st.warning(f"Are you sure you want to delete task {task_name}? This will remove all images and reports.")
                 
                 col1, col2 = st.columns(2)
@@ -423,6 +440,42 @@ def home_page():
                         pass  # Action handled in callback
                 
                 st.markdown('</div>', unsafe_allow_html=True)
+
+# Finally, let's modify the display_formatted_analysis function to ensure responsive text
+
+def display_formatted_analysis(analysis_text):
+    """Display the analysis in a formatted way with proper text color and responsive layout"""
+    # Import colors from config
+    from config import COLOR_THEME as colors
+    
+    if not analysis_text:
+        st.info("No analysis available.")
+        return
+    
+    # Wrap the entire analysis in a div with styling using the config color
+    st.markdown(f'<div class="analysis-results" style="color: {colors["ANALYSIS_TEXT_COLOR"]}; width: 100%; max-width: 100%;">', unsafe_allow_html=True)
+    
+    # Handle the raw analysis string properly
+    lines = analysis_text.split('\n')
+    current_section = None
+    
+    for line in lines:
+        # Check if this is a section header (all caps followed by colon)
+        if line.strip().upper() == line.strip() and ':' in line:
+            current_section = line.strip()
+            # Display section headers with the analysis color, not the heading color
+            st.markdown(f'<h3 style="color: {colors["ANALYSIS_TEXT_COLOR"]};">{current_section}</h3>', unsafe_allow_html=True)
+        
+        # Check if this is a bullet point
+        elif line.strip().startswith('- '):
+            st.markdown(f'<p style="color: {colors["ANALYSIS_TEXT_COLOR"]}; word-wrap: break-word;">{line}</p>', unsafe_allow_html=True)
+        
+        # Regular text line
+        elif line.strip():
+            st.markdown(f'<p style="color: {colors["ANALYSIS_TEXT_COLOR"]}; word-wrap: break-word;">{line}</p>', unsafe_allow_html=True)
+    
+    # Close the wrapper div
+    st.markdown('</div>', unsafe_allow_html=True)
 
 def admin_page():
     """Admin page for managing users and system settings"""
@@ -955,235 +1008,8 @@ def display_task_history():
         # Close the container
         st.markdown('</div>', unsafe_allow_html=True)
 
-def bulk_upload_page():
-    """Render the improved bulk upload page with better camera controls"""
-    st.title("Bulk Upload")
-    
-    # Back button
-    if st.button("Back to Home"):
-        st.session_state.page = "home"
-        # Make sure to turn off camera when navigating away
-        st.session_state.camera_on = False
-        # Clear task naming state
-        if 'task_name_submitted' in st.session_state:
-            del st.session_state.task_name_submitted
-        if 'task_name' in st.session_state:
-            del st.session_state.task_name
-        if 'task_description' in st.session_state:
-            del st.session_state.task_description
-        st.rerun()
-    
-    # If this is first load, show task naming dialog
-    if 'task_name_submitted' not in st.session_state:
-        st.session_state.task_name_submitted = False
-        
-    if not st.session_state.task_name_submitted:
-        # Force form width with a column
-        _, center_col, _ = st.columns([1, 3, 1])
-        
-        with center_col:
-            # Use a form with a border
-            with st.form("create_task_form", border=True):
-                task_name = st.text_input("Task Name (required)")
-                task_description = st.text_area("Task Description (optional)", height=100)
-                
-                # Create a row of 5 columns for button placement
-                cols = st.columns([1, 2, 1, 2, 1])
-                
-                with cols[1]:
-                    continue_btn = st.form_submit_button("Continue", use_container_width=True)
-                
-                with cols[3]:
-                    cancel_btn = st.form_submit_button("Cancel", use_container_width=True)
-        
-        # Handle form submission
-        if continue_btn:
-            if not task_name:
-                st.error("Task name is required")
-            else:
-                st.session_state.task_name = task_name
-                st.session_state.task_description = task_description
-                st.session_state.task_name_submitted = True
-                st.rerun()
-        
-        if cancel_btn:
-            st.session_state.page = "home"
-            st.rerun()
-        
-        # Don't show the rest of the page until task name is submitted
-        return
-    
-    # Show task name at the top of the page
-    st.info(f"Task: {st.session_state.task_name}")
-    
-    # Initialize camera state if not present
-    if 'camera_on' not in st.session_state:
-        st.session_state.camera_on = False
-    
-    # Initialize file uploader key
-    if 'file_uploader_key' not in st.session_state:
-        st.session_state.file_uploader_key = 0
-    
-    # Add Images section with a container that has a border
-    with st.container():
-        # Add border style in container
-        st.markdown("""
-        <style>
-        [data-testid="stVerticalBlock"] > div:nth-child(7) {
-            border: 1px solid #E0E0E0;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 15px;
-            background-color: #F9F9F9;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-        
-        st.subheader("Add Images")
-    
-    # Put a small vertical spacer
-    st.markdown("<br>", unsafe_allow_html=True)
-    
-    # Create three columns to make room for a divider
-    left_col, divider_col, right_col = st.columns([10, 1, 10])
-    
-    with left_col:
-        st.subheader("Upload with Camera")
-        
-        # Add camera toggle buttons - one to turn on and one to turn off
-        cam_col1, cam_col2 = st.columns(2)
-        
-        with cam_col1:
-            if not st.session_state.camera_on:
-                if st.button("Turn On Camera", key="open_camera"):
-                    st.session_state.camera_on = True
-                    st.rerun()
-        
-        with cam_col2:
-            if st.session_state.camera_on:
-                if st.button("Turn Off Camera", key="close_camera"):
-                    st.session_state.camera_on = False
-                    st.rerun()
-        
-        # Only show camera when toggled on
-        if st.session_state.camera_on:
-            camera_img = st.camera_input("Take a picture")
-            
-            if camera_img:
-                # Add description
-                camera_desc = st.text_input("Enter description (optional)", key="camera_desc")
-                
-                if st.button("Add to Bulk Upload", key="add_camera"):
-                    img_info = processing.add_image_to_current_task(camera_img.getvalue(), camera_desc)
-                    st.session_state.current_task_images.append(img_info)
-                    st.success("Image added to bulk upload task")
-                    # Don't turn off camera automatically to allow multiple photos
-                    st.rerun()
-    
-    # Add a vertical divider in the middle column
-    with divider_col:
-        # This creates a full-height black divider
-        st.markdown("""
-        <div style="background-color: black; width: 1px; height: 300px; margin: 0 auto;"></div>
-        """, unsafe_allow_html=True)
-    
-    with right_col:
-        st.subheader("Upload from Gallery")
-        
-        # Automatically turn off camera when user selects file uploader
-        if not st.session_state.camera_on:
-            # Normal file uploader flow
-            uploaded_file = st.file_uploader(
-                "Choose an image", 
-                type=["jpg", "jpeg", "png"], 
-                key=f"file_uploader_{st.session_state.file_uploader_key}"
-            )
-            
-            if uploaded_file:
-                # Add description
-                gallery_desc = st.text_input("Enter description (optional)", key="gallery_desc")
-                
-                if st.button("Add to Bulk Upload", key="add_gallery"):
-                    img_info = processing.add_image_to_current_task(uploaded_file.getbuffer(), gallery_desc)
-                    st.session_state.current_task_images.append(img_info)
-                    st.success("Image added to bulk upload task")
-                    # Increment the key to reset the file uploader
-                    st.session_state.file_uploader_key += 1
-                    st.rerun()
-        else:
-            # Show a message when camera is on
-            st.warning("Please turn off the camera before using gallery upload")
-            
-    # Display current images in bulk upload task
-    if st.session_state.current_task_images:
-        # Add Current Task Images header in a box with custom styling
-        st.markdown("""
-        <div style="
-            border: 1px solid #C75F42; 
-            border-radius: 9px; 
-            padding: -2px -2px; 
-            margin-bottom: 15px;
-            background-color: white;">
-            <h3 style="margin: 0; color: #429FC7;">Current Task Images</h3>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Determine how many columns to use
-        num_columns = 6 
-        image_cols = st.columns(num_columns)
-        
-        for i, img in enumerate(st.session_state.current_task_images):
-            col_idx = i % num_columns
-            with image_cols[col_idx]:
-                try:
-                    image = Image.open(img["path"])
-                    # Use smaller thumbnails
-                    st.image(
-                        image, 
-                        caption=img["description"] if img["description"] else "", 
-                        width=60,
-                        use_container_width=False
-                    )
-                    
-                    # Small remove button under each thumbnail
-                    if st.button("×", key=f"remove_{img['id']}", help="Remove image"):
-                        # Remove image from list and file system
-                        try:
-                            os.remove(img["path"])
-                        except:
-                            pass
-                        st.session_state.current_task_images.remove(img)
-                        st.rerun()
-                except Exception as e:
-                    st.error(f"Error displaying image: {str(e)}")
-        
-        # Submit button
-        if st.button("Submit Bulk Upload", use_container_width=True):
-            # Always turn off camera when submitting
-            st.session_state.camera_on = False
-            
-            task_id = processing.submit_task(
-                st.session_state.user_id, 
-                "bulk", 
-                st.session_state.current_task_images,
-                st.session_state.task_name,
-                st.session_state.task_description
-            )
-            st.success(f"Bulk upload task #{task_id} submitted and processing in the background")
-            st.session_state.current_task_images = []
-            # Clear task naming state
-            if 'task_name_submitted' in st.session_state:
-                del st.session_state.task_name_submitted
-            if 'task_name' in st.session_state:
-                del st.session_state.task_name
-            if 'task_description' in st.session_state:
-                del st.session_state.task_description
-            st.session_state.page = "home"
-            st.rerun()
-
-
 def single_upload_page():
-    """Render the improved single upload page with better camera controls"""
+    """Render the improved single upload page with better camera controls and mobile responsiveness"""
     st.title("Single Upload")
     
     # Back button
@@ -1271,6 +1097,23 @@ def single_upload_page():
     # Put a small vertical spacer
     st.markdown("<br>", unsafe_allow_html=True)
     
+    # Add CSS to hide the divider on mobile
+    st.markdown("""
+    <style>
+    @media (max-width: 767px) {
+        .mobile-hidden {
+            display: none !important;
+        }
+        
+        /* On mobile, stack the columns vertically */
+        [data-testid="column"]:nth-of-type(1), 
+        [data-testid="column"]:nth-of-type(3) {
+            width: 100% !important;
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
     # Create three columns to make room for a divider
     left_col, divider_col, right_col = st.columns([10, 1, 10])
     
@@ -1350,7 +1193,8 @@ def single_upload_page():
                         </div>
                         """, unsafe_allow_html=True)
                         
-                        st.image(Image.open(images_df.iloc[0]['image_path']), width=300)
+                        # Make image responsive
+                        st.image(Image.open(images_df.iloc[0]['image_path']), use_column_width=True)
                         display_formatted_analysis(analysis)
                     
                     # Clear the task list and turn off camera
@@ -1363,11 +1207,11 @@ def single_upload_page():
                     if 'task_description' in st.session_state:
                         del st.session_state.task_description
     
-    # Add a vertical divider in the middle column
+    # Add a vertical divider in the middle column - with class for mobile hiding
     with divider_col:
-        # This creates a full-height black divider
+        # This creates a full-height black divider that will be hidden on mobile
         st.markdown("""
-        <div style="background-color: black; width: 1px; height: 300px; margin: 0 auto;"></div>
+        <div class="mobile-hidden" style="background-color: black; width: 1px; height: 300px; margin: 0 auto;"></div>
         """, unsafe_allow_html=True)
     
     with right_col:
@@ -1432,7 +1276,8 @@ def single_upload_page():
                         </div>
                         """, unsafe_allow_html=True)
                         
-                        st.image(Image.open(images_df.iloc[0]['image_path']), width=300)
+                        # Make image responsive
+                        st.image(Image.open(images_df.iloc[0]['image_path']), use_column_width=True)
                         display_formatted_analysis(analysis)
                     
                     # Clear the task list and reset file uploader
@@ -1449,3 +1294,310 @@ def single_upload_page():
         else:
             # Show a message when camera is on
             st.warning("Please turn off the camera before using gallery upload")
+
+# Update the bulk_upload_page function to be mobile responsive
+def bulk_upload_page():
+    """Render the improved bulk upload page with better camera controls and mobile responsiveness"""
+    st.title("Bulk Upload")
+    
+    # Back button
+    if st.button("Back to Home"):
+        st.session_state.page = "home"
+        # Make sure to turn off camera when navigating away
+        st.session_state.camera_on = False
+        # Clear task naming state
+        if 'task_name_submitted' in st.session_state:
+            del st.session_state.task_name_submitted
+        if 'task_name' in st.session_state:
+            del st.session_state.task_name
+        if 'task_description' in st.session_state:
+            del st.session_state.task_description
+        st.rerun()
+    
+    # If this is first load, show task naming dialog
+    if 'task_name_submitted' not in st.session_state:
+        st.session_state.task_name_submitted = False
+        
+    if not st.session_state.task_name_submitted:
+        # Force form width with a column
+        _, center_col, _ = st.columns([1, 3, 1])
+        
+        with center_col:
+            # Use a form with a border
+            with st.form("create_task_form", border=True):
+                task_name = st.text_input("Task Name (required)")
+                task_description = st.text_area("Task Description (optional)", height=100)
+                
+                # Create a row of 5 columns for button placement
+                cols = st.columns([1, 2, 1, 2, 1])
+                
+                with cols[1]:
+                    continue_btn = st.form_submit_button("Continue", use_container_width=True)
+                
+                with cols[3]:
+                    cancel_btn = st.form_submit_button("Cancel", use_container_width=True)
+        
+        # Handle form submission
+        if continue_btn:
+            if not task_name:
+                st.error("Task name is required")
+            else:
+                st.session_state.task_name = task_name
+                st.session_state.task_description = task_description
+                st.session_state.task_name_submitted = True
+                st.rerun()
+        
+        if cancel_btn:
+            st.session_state.page = "home"
+            st.rerun()
+        
+        # Don't show the rest of the page until task name is submitted
+        return
+    
+    # Show task name at the top of the page
+    st.info(f"Task: {st.session_state.task_name}")
+    
+    # Initialize camera state if not present
+    if 'camera_on' not in st.session_state:
+        st.session_state.camera_on = False
+    
+    # Initialize file uploader key
+    if 'file_uploader_key' not in st.session_state:
+        st.session_state.file_uploader_key = 0
+    
+    # Add Images section with a container that has a border
+    with st.container():
+        # Add border style in container
+        st.markdown("""
+        <style>
+        [data-testid="stVerticalBlock"] > div:nth-child(7) {
+            border: 1px solid #E0E0E0;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 15px;
+            background-color: #F9F9F9;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        st.subheader("Add Images")
+    
+    # Put a small vertical spacer
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    # Add CSS to hide the divider on mobile and stack columns
+    st.markdown("""
+    <style>
+    @media (max-width: 767px) {
+        .mobile-hidden {
+            display: none !important;
+        }
+        
+        /* On mobile, stack the columns vertically */
+        [data-testid="column"]:nth-of-type(1), 
+        [data-testid="column"]:nth-of-type(3) {
+            width: 100% !important;
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    # Create three columns to make room for a divider
+    left_col, divider_col, right_col = st.columns([10, 1, 10])
+    
+    with left_col:
+        st.subheader("Upload with Camera")
+        
+        # Add camera toggle buttons - one to turn on and one to turn off
+        cam_col1, cam_col2 = st.columns(2)
+        
+        with cam_col1:
+            if not st.session_state.camera_on:
+                if st.button("Turn On Camera", key="open_camera"):
+                    st.session_state.camera_on = True
+                    st.rerun()
+        
+        with cam_col2:
+            if st.session_state.camera_on:
+                if st.button("Turn Off Camera", key="close_camera"):
+                    st.session_state.camera_on = False
+                    st.rerun()
+        
+        # Only show camera when toggled on
+        if st.session_state.camera_on:
+            camera_img = st.camera_input("Take a picture")
+            
+            if camera_img:
+                # Add description
+                camera_desc = st.text_input("Enter description (optional)", key="camera_desc")
+                
+                if st.button("Add to Bulk Upload", key="add_camera"):
+                    img_info = processing.add_image_to_current_task(camera_img.getvalue(), camera_desc)
+                    st.session_state.current_task_images.append(img_info)
+                    st.success("Image added to bulk upload task")
+                    # Don't turn off camera automatically to allow multiple photos
+                    st.rerun()
+    
+    # Add a vertical divider in the middle column - with class for mobile hiding
+    with divider_col:
+        # This creates a full-height black divider that will be hidden on mobile
+        st.markdown("""
+        <div class="mobile-hidden" style="background-color: black; width: 1px; height: 300px; margin: 0 auto;"></div>
+        """, unsafe_allow_html=True)
+    
+    with right_col:
+        st.subheader("Upload from Gallery")
+        
+        # Automatically turn off camera when user selects file uploader
+        if not st.session_state.camera_on:
+            # Normal file uploader flow
+            uploaded_file = st.file_uploader(
+                "Choose an image", 
+                type=["jpg", "jpeg", "png"], 
+                key=f"file_uploader_{st.session_state.file_uploader_key}"
+            )
+            
+            if uploaded_file:
+                # Add description
+                gallery_desc = st.text_input("Enter description (optional)", key="gallery_desc")
+                
+                if st.button("Add to Bulk Upload", key="add_gallery"):
+                    img_info = processing.add_image_to_current_task(uploaded_file.getbuffer(), gallery_desc)
+                    st.session_state.current_task_images.append(img_info)
+                    st.success("Image added to bulk upload task")
+                    # Increment the key to reset the file uploader
+                    st.session_state.file_uploader_key += 1
+                    st.rerun()
+        else:
+            # Show a message when camera is on
+            st.warning("Please turn off the camera before using gallery upload")
+            
+    # Display current images in bulk upload task with responsive grid
+    if st.session_state.current_task_images:
+        # Add Current Task Images header in a box with custom styling
+        st.markdown("""
+        <div style="
+            border: 1px solid #C75F42; 
+            border-radius: 9px; 
+            padding: -2px -2px; 
+            margin-bottom: 15px;
+            background-color: white;">
+            <h3 style="margin: 0; color: #429FC7;">Current Task Images</h3>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # Add responsive grid CSS
+        st.markdown("""
+        <style>
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            grid-gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .image-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .image-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+        }
+        
+        .image-caption {
+            font-size: 0.8em;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 100%;
+        }
+        
+        /* Desktop specific */
+        @media (min-width: 768px) {
+            .image-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+        </style>
+        <div class="image-grid">
+        """, unsafe_allow_html=True)
+        
+        # Create image grid in HTML
+        image_items_html = ""
+        for i, img in enumerate(st.session_state.current_task_images):
+            try:
+                from PIL import Image
+                import base64
+                import io
+                
+                # Open image and convert to base64 for HTML
+                image = Image.open(img["path"])
+                buffered = io.BytesIO()
+                image.save(buffered, format="JPEG")
+                img_str = base64.b64encode(buffered.getvalue()).decode()
+                
+                # Create HTML for this image item
+                caption = img["description"] if img["description"] else ""
+                image_items_html += f"""
+                <div class="image-item">
+                    <img src="data:image/jpeg;base64,{img_str}" alt="Upload {i+1}"/>
+                    <div class="image-caption">{caption}</div>
+                </div>
+                """
+            except Exception as e:
+                pass
+        
+        # Close the grid
+        st.markdown(image_items_html + "</div>", unsafe_allow_html=True)
+        
+        # Display remove buttons with individual keys
+        st.markdown("<h4>Remove Images</h4>", unsafe_allow_html=True)
+        
+        # Determine how many columns for remove buttons (responsive)
+        col_count = 3
+        num_rows = (len(st.session_state.current_task_images) + col_count - 1) // col_count
+        
+        for row in range(num_rows):
+            cols = st.columns(col_count)
+            for col in range(col_count):
+                idx = row * col_count + col
+                if idx < len(st.session_state.current_task_images):
+                    img = st.session_state.current_task_images[idx]
+                    with cols[col]:
+                        if st.button(f"Remove #{idx+1}", key=f"remove_{img['id']}", help=f"Remove {img['description'] or 'Untitled'}"):
+                            # Remove image from list and file system
+                            try:
+                                os.remove(img["path"])
+                            except:
+                                pass
+                            st.session_state.current_task_images.pop(idx)
+                            st.rerun()
+        
+        # Submit button
+        if st.button("Submit Bulk Upload", use_container_width=True):
+            # Always turn off camera when submitting
+            st.session_state.camera_on = False
+            
+            task_id = processing.submit_task(
+                st.session_state.user_id, 
+                "bulk", 
+                st.session_state.current_task_images,
+                st.session_state.task_name,
+                st.session_state.task_description
+            )
+            st.success(f"Bulk upload task #{task_id} submitted and processing in the background")
+            st.session_state.current_task_images = []
+            # Clear task naming state
+            if 'task_name_submitted' in st.session_state:
+                del st.session_state.task_name_submitted
+            if 'task_name' in st.session_state:
+                del st.session_state.task_name
+            if 'task_description' in st.session_state:
+                del st.session_state.task_description
+            st.session_state.page = "home"
+            st.rerun()

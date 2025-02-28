@@ -150,10 +150,10 @@ def apply_custom_css():
     st.markdown(custom_css, unsafe_allow_html=True)
 
 def apply_global_width_fixes():
-    """Apply global fixes for width and centering across all pages"""
+    """Apply global fixes for width and centering across all pages with mobile responsiveness"""
     st.markdown("""
     <style>
-    /* Universal width limit for interactive elements */
+    /* Universal width limit for interactive elements - responsive for mobile */
     .stTextInput, 
     .stNumberInput, 
     .stTextArea, 
@@ -165,9 +165,27 @@ def apply_global_width_fixes():
     .stDateInput,
     .stTimeInput,
     .stFileUploader {
-        max-width: 400px !important;
+        max-width: 100% !important;
+        width: 100% !important;
         margin-left: auto !important;
         margin-right: auto !important;
+    }
+    
+    /* Desktop specific sizing */
+    @media (min-width: 768px) {
+        .stTextInput, 
+        .stNumberInput, 
+        .stTextArea, 
+        .stButton,
+        .stSelectbox,
+        .stMultiselect,
+        .stCheckbox,
+        .stRadio,
+        .stDateInput,
+        .stTimeInput,
+        .stFileUploader {
+            max-width: 400px !important;
+        }
     }
     
     /* Form input elements themselves */
@@ -178,7 +196,7 @@ def apply_global_width_fixes():
     .stSelectbox > div > div,
     .stMultiselect > div > div,
     .stFileUploader > div > input {
-        max-width: 400px !important;
+        max-width: 100% !important;
         width: 100% !important;
     }
     
@@ -189,30 +207,61 @@ def apply_global_width_fixes():
         justify-content: center !important;
     }
     
-    /* Task items should be 400px but expanded content can be 800px */
+    /* Task items should scale with screen size but max 400px on desktop */
     button[kind="expansionpanel"] {
-        max-width: 400px !important;
+        max-width: 100% !important;
+        width: 100% !important;
     }
     
-    /* When expanded, allow 800px width */
+    @media (min-width: 768px) {
+        button[kind="expansionpanel"] {
+            max-width: 400px !important;
+        }
+    }
+    
+    /* When expanded, allow full width on mobile, 800px on desktop */
     .stExpander {
-        max-width: 800px !important;
+        max-width: 100% !important;
+        width: 100% !important;
         margin-left: auto !important;
         margin-right: auto !important;
     }
     
-    /* Camera input */
+    @media (min-width: 768px) {
+        .stExpander {
+            max-width: 800px !important;
+        }
+    }
+    
+    /* Camera input - takes 75% of screen height on mobile */
     .stCameraInput > div {
-        max-width: 400px !important;
+        max-width: 100% !important;
         margin-left: auto !important;
         margin-right: auto !important;
     }
     
-    /* Tabs */
+    /* Make camera take 75% of viewport height on mobile */
+    @media (max-width: 767px) {
+        .stCameraInput [data-testid="stImage"] {
+            height: 75vh !important;
+            width: auto !important;
+            max-width: 100% !important;
+            object-fit: contain !important;
+        }
+    }
+    
+    /* Tabs - full width on mobile */
     .stTabs {
-        max-width: 800px !important;
+        max-width: 100% !important;
+        width: 100% !important;
         margin-left: auto !important;
         margin-right: auto !important;
+    }
+    
+    @media (min-width: 768px) {
+        .stTabs {
+            max-width: 800px !important;
+        }
     }
     
     /* Title centering */
@@ -224,8 +273,15 @@ def apply_global_width_fixes():
     .task-container {
         display: flex !important;
         align-items: center !important;
-        max-width: 400px !important;
+        max-width: 100% !important;
+        width: 100% !important;
         margin: 0 auto 10px auto !important;
+    }
+    
+    @media (min-width: 768px) {
+        .task-container {
+            max-width: 400px !important;
+        }
     }
     
     /* Trash button alignment */
@@ -243,15 +299,87 @@ def apply_global_width_fixes():
     
     /* Task creation form buttons styles */
     .task-create-form .button-container {
-        max-width: 400px !important;
+        width: 100% !important;
+        max-width: 100% !important;
         margin: 0 auto !important;
         display: flex !important;
         gap: 10px !important;
     }
     
+    @media (min-width: 768px) {
+        .task-create-form .button-container {
+            max-width: 400px !important;
+        }
+    }
+    
     .task-create-form .button-col {
         flex: 1 !important;
         padding: 0 !important;
+    }
+    
+    /* Fix for images in task analysis to fit mobile screens */
+    .stExpander img, .stImage img, .stExpander [data-testid="stImage"], .stExpander [data-testid="stImage"] > div {
+        max-width: 100% !important;
+        height: auto !important;
+        object-fit: contain !important;
+    }
+    
+    /* Make results content in expanded tasks fit mobile */
+    div[data-testid="stExpander"][aria-expanded="true"] [data-testid="column"] {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
+    }
+    
+    @media (min-width: 768px) {
+        div[data-testid="stExpander"][aria-expanded="true"] [data-testid="column"] {
+            width: 390px !important;
+            max-width: 390px !important;
+            min-width: 390px !important;
+        }
+    }
+    
+    /* Fix for images and text in expanded content on mobile */
+    @media (max-width: 767px) {
+        div[data-testid="stExpander"][aria-expanded="true"] {
+            width: 100% !important; 
+            max-width: 100% !important;
+            min-width: 100% !important;
+        }
+        
+        div[data-testid="stExpander"][aria-expanded="true"] > div:nth-child(2) {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+        }
+        
+        /* Switch to vertical layout for image and analysis on mobile */
+        div[data-testid="stExpander"] [data-testid="column"] {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 100% !important;
+        }
+    }
+    
+    /* Fix streamlit's default horizontal scroll on mobile */
+    .main .block-container {
+        max-width: 100% !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        padding-top: 1rem !important;
+    }
+    
+    /* Streamlit containers should be responsive */
+    .element-container, [data-testid="stVerticalBlock"] {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    /* Force Streamlit's app to be full width */
+    .appview-container .main .block-container {
+        max-width: 100% !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
     }
     </style>
     """, unsafe_allow_html=True)
