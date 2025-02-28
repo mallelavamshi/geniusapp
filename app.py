@@ -233,21 +233,25 @@ def apply_global_width_fixes():
         }
     }
     
-    /* Camera input - takes 75% of screen height on mobile */
-    .stCameraInput > div {
+    /* Camera input - improved height on mobile to take 75% of viewport height */
+    .stCameraInput {
+        height: 75vh !important;
+        max-height: 75vh !important;
+        width: 100% !important;
         max-width: 100% !important;
-        margin-left: auto !important;
-        margin-right: auto !important;
+        margin: 0 auto !important;
     }
     
-    /* Make camera take 75% of viewport height on mobile */
-    @media (max-width: 767px) {
-        .stCameraInput [data-testid="stImage"] {
-            height: 75vh !important;
-            width: auto !important;
-            max-width: 100% !important;
-            object-fit: contain !important;
-        }
+    /* Make camera elements size properly */
+    .stCameraInput > div,
+    .stCameraInput [data-testid="stImage"],
+    .stCameraInput [data-testid="stImage"] > div,
+    .stCameraInput video {
+        height: 75vh !important;
+        max-height: 75vh !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        object-fit: contain !important;
     }
     
     /* Tabs - full width on mobile */
@@ -324,6 +328,18 @@ def apply_global_width_fixes():
         object-fit: contain !important;
     }
     
+    /* Fix text overflow in task history */
+    .stExpander p, 
+    .stExpander div p, 
+    .stExpander span,
+    .analysis-results p,
+    .task-analysis-text {
+        max-width: 100% !important;
+        word-wrap: break-word !important;
+        overflow-wrap: break-word !important;
+        white-space: normal !important;
+    }
+    
     /* Make results content in expanded tasks fit mobile */
     div[data-testid="stExpander"][aria-expanded="true"] [data-testid="column"] {
         width: 100% !important;
@@ -353,7 +369,7 @@ def apply_global_width_fixes():
             min-width: 100% !important;
         }
         
-        /* Switch to vertical layout for image and analysis on mobile */
+        /* Stack columns vertically on mobile */
         div[data-testid="stExpander"] [data-testid="column"] {
             width: 100% !important;
             max-width: 100% !important;
@@ -367,12 +383,14 @@ def apply_global_width_fixes():
         padding-left: 1rem !important;
         padding-right: 1rem !important;
         padding-top: 1rem !important;
+        overflow-x: hidden !important;
     }
     
     /* Streamlit containers should be responsive */
     .element-container, [data-testid="stVerticalBlock"] {
         width: 100% !important;
         max-width: 100% !important;
+        overflow-x: hidden !important;
     }
     
     /* Force Streamlit's app to be full width */
@@ -380,6 +398,15 @@ def apply_global_width_fixes():
         max-width: 100% !important;
         padding-left: 1rem !important;
         padding-right: 1rem !important;
+        overflow-x: hidden !important;
+    }
+    
+    /* Prevent horizontal scrolling on the entire app */
+    body {
+        overflow-x: hidden !important;
+    }
+    html {
+        overflow-x: hidden !important;
     }
     </style>
     """, unsafe_allow_html=True)

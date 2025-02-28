@@ -281,6 +281,7 @@ def home_page():
         # Task history header (centered)
         st.markdown('<h2 class="centered-title">Task History</h2>', unsafe_allow_html=True)
         
+        # Get fresh task data whenever we display task history
         tasks_df = db.get_user_tasks(st.session_state.user_id)
         
         if tasks_df.empty:
@@ -341,15 +342,22 @@ def home_page():
                     if task['status'] == 'completed':
                         st.write(f"**Completed:** {task['completed_at']}")
                         
+                        # Add file existence check for report download
                         if task['task_type'] == 'bulk' and task['output_path']:
-                            with open(task['output_path'], "rb") as file:
-                                st.download_button(
-                                    label="Download Report",
-                                    data=file,
-                                    file_name=os.path.basename(task['output_path']),
-                                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                                    use_container_width=True
-                                )
+                            try:
+                                if os.path.exists(task['output_path']):
+                                    with open(task['output_path'], "rb") as file:
+                                        st.download_button(
+                                            label="Download Report",
+                                            data=file,
+                                            file_name=os.path.basename(task['output_path']),
+                                            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                                            use_container_width=True
+                                        )
+                                else:
+                                    st.warning("Report file not found. It may have been deleted.")
+                            except Exception as e:
+                                st.warning(f"Could not load report file: {e}")
                     
                     # Allow user to mark task as complete if it's in review status
                     if task['status'] == 'needs_review':
@@ -360,41 +368,47 @@ def home_page():
                                 st.error("Failed to mark task as complete")
                     
                     # Load images and their analysis explicitly, whether expanded or not
-                    images_df = db.get_image_analysis(task['id'])
-                    
-                    if not images_df.empty:
-                        # Always display results header
-                        st.subheader("Results")
+                    try:
+                        images_df = db.get_image_analysis(task['id'])
                         
-                        # Mobile-first approach: on mobile devices, stack images and analysis
-                        for i, img in enumerate(images_df.itertuples()):
-                            # Add a separator between images
-                            if i > 0:
-                                st.markdown("---")
+                        if not images_df.empty:
+                            # Always display results header
+                            st.subheader("Results")
                             
-                            # Use columns for desktop but stack for mobile
-                            col1, col2 = st.columns(2)
-                            
-                            with col1:
-                                st.markdown('<div class="image-column">', unsafe_allow_html=True)
-                                try:
-                                    image = Image.open(img.image_path)
-                                    # Use column width instead of fixed width for responsiveness
-                                    st.image(image, use_column_width=True)
-                                    st.write(f"**Description:** {img.description if img.description else 'None'}")
-                                except Exception as e:
-                                    st.error(f"Error loading image: {e}")
-                                st.markdown('</div>', unsafe_allow_html=True)
-                            
-                            with col2:
-                                st.markdown('<div class="analysis-column">', unsafe_allow_html=True)
-                                # Show analysis directly
-                                if img.analysis:
-                                    st.write("**Analysis:**")
-                                    st.write(img.analysis)
-                                else:
-                                    st.info("No analysis available")
-                                st.markdown('</div>', unsafe_allow_html=True)
+                            # Mobile-first approach: on mobile devices, stack images and analysis
+                            for i, img in enumerate(images_df.itertuples()):
+                                # Add a separator between images
+                                if i > 0:
+                                    st.markdown("---")
+                                
+                                # Use columns for desktop but stack for mobile
+                                col1, col2 = st.columns(2)
+                                
+                                with col1:
+                                    st.markdown('<div class="image-column">', unsafe_allow_html=True)
+                                    try:
+                                        if os.path.exists(img.image_path):
+                                            image = Image.open(img.image_path)
+                                            # Use container_width instead of column_width
+                                            st.image(image, use_container_width=True)
+                                            st.write(f"**Description:** {img.description if img.description else 'None'}")
+                                        else:
+                                            st.warning("Image file not found. It may have been deleted.")
+                                    except Exception as e:
+                                        st.error(f"Error loading image: {e}")
+                                    st.markdown('</div>', unsafe_allow_html=True)
+                                
+                                with col2:
+                                    st.markdown('<div class="analysis-column">', unsafe_allow_html=True)
+                                    # Show analysis directly
+                                    if img.analysis:
+                                        st.write("**Analysis:**")
+                                        st.write(img.analysis)
+                                    else:
+                                        st.info("No analysis available")
+                                    st.markdown('</div>', unsafe_allow_html=True)
+                    except Exception as e:
+                        st.warning(f"Could not load task data: {e}")
                     
                     # Display delete task button
                     def set_delete_task(task_id, task_name):
@@ -418,13 +432,18 @@ def home_page():
                 col1, col2 = st.columns(2)
                 
                 def confirm_delete():
-                    if db.delete_task(st.session_state.confirm_delete_task):
-                        # If the active task was deleted, clear it
-                        if st.session_state.active_task == st.session_state.confirm_delete_task:
-                            st.session_state.active_task = None
-                        # Clear the confirmation state
-                        del st.session_state.confirm_delete_task
-                        del st.session_state.confirm_delete_name
+                    try:
+                        if db.delete_task(st.session_state.confirm_delete_task):
+                            # If the active task was deleted, clear it
+                            if st.session_state.active_task == st.session_state.confirm_delete_task:
+                                st.session_state.active_task = None
+                            # Clear the confirmation state
+                            del st.session_state.confirm_delete_task
+                            del st.session_state.confirm_delete_name
+                            # Force rerun to update UI
+                            st.rerun()
+                    except Exception as e:
+                        st.error(f"Error deleting task: {e}")
                 
                 def cancel_delete():
                     # Clear the confirmation state
@@ -452,8 +471,16 @@ def display_formatted_analysis(analysis_text):
         st.info("No analysis available.")
         return
     
-    # Wrap the entire analysis in a div with styling using the config color
-    st.markdown(f'<div class="analysis-results" style="color: {colors["ANALYSIS_TEXT_COLOR"]}; width: 100%; max-width: 100%;">', unsafe_allow_html=True)
+    # Wrap the entire analysis in a div with styling using the config color and word wrap for mobile
+    st.markdown(f'''
+    <div class="analysis-results" style="
+        color: {colors["ANALYSIS_TEXT_COLOR"]}; 
+        width: 100%; 
+        max-width: 100%;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;">
+    ''', unsafe_allow_html=True)
     
     # Handle the raw analysis string properly
     lines = analysis_text.split('\n')
@@ -464,18 +491,43 @@ def display_formatted_analysis(analysis_text):
         if line.strip().upper() == line.strip() and ':' in line:
             current_section = line.strip()
             # Display section headers with the analysis color, not the heading color
-            st.markdown(f'<h3 style="color: {colors["ANALYSIS_TEXT_COLOR"]};">{current_section}</h3>', unsafe_allow_html=True)
+            st.markdown(f'''
+            <h3 style="
+                color: {colors["ANALYSIS_TEXT_COLOR"]}; 
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                white-space: normal;">
+                {current_section}
+            </h3>
+            ''', unsafe_allow_html=True)
         
         # Check if this is a bullet point
         elif line.strip().startswith('- '):
-            st.markdown(f'<p style="color: {colors["ANALYSIS_TEXT_COLOR"]}; word-wrap: break-word;">{line}</p>', unsafe_allow_html=True)
+            st.markdown(f'''
+            <p style="
+                color: {colors["ANALYSIS_TEXT_COLOR"]}; 
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                white-space: normal;">
+                {line}
+            </p>
+            ''', unsafe_allow_html=True)
         
         # Regular text line
         elif line.strip():
-            st.markdown(f'<p style="color: {colors["ANALYSIS_TEXT_COLOR"]}; word-wrap: break-word;">{line}</p>', unsafe_allow_html=True)
+            st.markdown(f'''
+            <p style="
+                color: {colors["ANALYSIS_TEXT_COLOR"]}; 
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                white-space: normal;">
+                {line}
+            </p>
+            ''', unsafe_allow_html=True)
     
     # Close the wrapper div
     st.markdown('</div>', unsafe_allow_html=True)
+
 
 def admin_page():
     """Admin page for managing users and system settings"""

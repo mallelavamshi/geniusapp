@@ -577,7 +577,7 @@ def get_image_analysis(task_id):
     return images_df
 
 def delete_task(task_id):
-    """Delete a task and all associated data"""
+    """Delete a task and all associated data with improved error handling"""
     conn = sqlite3.connect(config.DATABASE_PATH)
     c = conn.cursor()
     
@@ -591,7 +591,7 @@ def delete_task(task_id):
         c.execute("SELECT image_path FROM images WHERE task_id = ?", (task_id,))
         image_paths = [row[0] for row in c.fetchall()]
         
-        # Delete images from database
+        # Delete images from database first (do this first to prevent orphaned records)
         c.execute("DELETE FROM images WHERE task_id = ?", (task_id,))
         
         # Delete task from database
@@ -599,20 +599,24 @@ def delete_task(task_id):
         
         conn.commit()
         
-        # Delete files from filesystem
+        # Delete files from filesystem - with error handling for each file
         for image_path in image_paths:
             try:
                 if os.path.exists(image_path):
                     os.remove(image_path)
+                    logger.info(f"Deleted image file: {image_path}")
             except Exception as e:
                 logger.error(f"Error deleting image file {image_path}: {e}")
+                # Continue with other files even if this one fails
         
         # Delete output file if exists
         if output_path and os.path.exists(output_path):
             try:
                 os.remove(output_path)
+                logger.info(f"Deleted output file: {output_path}")
             except Exception as e:
                 logger.error(f"Error deleting output file {output_path}: {e}")
+                # Continue even if output file deletion fails
                 
         return True
     except Exception as e:
