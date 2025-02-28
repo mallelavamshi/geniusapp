@@ -2,11 +2,10 @@ pipeline {
     agent any
     
     environment {
-        DOCKER_IMAGE = 'estategenius-ai'
-        DOCKER_TAG = "${env.BUILD_NUMBER}"
+        // Define container name and image tags as variables for consistency
         CONTAINER_NAME = 'estategenius-app'
-        SERVER_DATA_DIR = '/opt/estategenius/data'
-        ENV_FILE = credentials('estategenius-env-file')
+        IMAGE_NAME = 'estategenius-ai'
+        IMAGE_TAG = "${env.BUILD_NUMBER}"
     }
     
     stages {
@@ -18,73 +17,69 @@ pipeline {
         
         stage('Prepare Environment') {
             steps {
-                // Ensure data directories exist on the host
+                // Create necessary directories
+                sh 'mkdir -p /opt/estategenius/data/database'
+                sh 'mkdir -p /opt/estategenius/data/uploaded_images'
+                sh 'mkdir -p /opt/estategenius/data/reports'
+                sh 'mkdir -p /opt/estategenius/data/logs'
+                
+                // Verify directories are writable
                 sh '''
-                    mkdir -p ${SERVER_DATA_DIR}/database
-                    mkdir -p ${SERVER_DATA_DIR}/uploaded_images
-                    mkdir -p ${SERVER_DATA_DIR}/reports
-                    mkdir -p ${SERVER_DATA_DIR}/logs
-                    
-                    # Set proper permissions
-                    chmod -R 777 ${SERVER_DATA_DIR}
+                    [ ! -w /opt/estategenius/data/database ] && echo "Database directory not writable" && exit 1
+                    [ ! -w /opt/estategenius/data/uploaded_images ] && echo "Uploads directory not writable" && exit 1
+                    [ ! -w /opt/estategenius/data/reports ] && echo "Reports directory not writable" && exit 1
+                    [ ! -w /opt/estategenius/data/logs ] && echo "Logs directory not writable" && exit 1
+                    exit 0
                 '''
             }
         }
         
         stage('Build Docker Image') {
             steps {
-                script {
-                    // Build the Docker image
-                    sh "docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ."
-                    sh "docker tag ${DOCKER_IMAGE}:${DOCKER_TAG} ${DOCKER_IMAGE}:latest"
-                }
+                // Build the Docker image
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${IMAGE_NAME}:latest"
             }
         }
         
         stage('Deploy') {
             steps {
-                script {
-                    // Stop and remove existing container if it exists
-                    sh "docker stop ${CONTAINER_NAME} || true"
-                    sh "docker rm ${CONTAINER_NAME} || true"
-                    
-                    // Copy the .env file to the server
-                    sh "cp ${ENV_FILE} .env"
-                    
-                    // Run the new container with volume mounts for persistent data
-                    sh '''
-                        docker run -d \
-                            --name ${CONTAINER_NAME} \
-                            -p 8501:8501 \
-                            -v ${SERVER_DATA_DIR}/database:/app/data/database \
-                            -v ${SERVER_DATA_DIR}/uploaded_images:/app/uploaded_images \
-                            -v ${SERVER_DATA_DIR}/reports:/app/reports \
-                            -v ${SERVER_DATA_DIR}/logs:/app/logs \
-                            -v $(pwd)/.env:/app/.env \
-                            ${DOCKER_IMAGE}:${DOCKER_TAG}
-                    '''
+                // Stop and remove existing container if it exists
+                sh "docker stop ${CONTAINER_NAME} || true"
+                sh "docker rm ${CONTAINER_NAME} || true"
+                
+                // Deploy with credentials passed as environment variables
+                withCredentials([
+                    string(credentialsId: 'IMGBB_API_KEY', variable: 'IMGBB_API_KEY'),
+                    string(credentialsId: 'SEARCHAPI_API_KEY', variable: 'SEARCHAPI_API_KEY'),
+                    string(credentialsId: 'ANTHROPIC_API_KEY', variable: 'ANTHROPIC_API_KEY')
+                ]) {
+                    sh """
+                        docker run -d -p 8501:8501 --name ${CONTAINER_NAME} \
+                        -v /opt/estategenius/data:/app/data \
+                        -e IMGBB_API_KEY=${IMGBB_API_KEY} \
+                        -e SEARCHAPI_API_KEY=${SEARCHAPI_API_KEY} \
+                        -e ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY} \
+                        ${IMAGE_NAME}:latest
+                    """
                 }
             }
         }
         
         stage('Clean Up') {
             steps {
-                // Remove unused Docker images to save space (keep the last 3)
-                sh '''
-                    docker image prune -f
-                    # Keep only the 3 most recent versions and remove the rest
-                    docker images --format "{{.ID}} {{.Repository}}" | grep ${DOCKER_IMAGE} | sort -k 2 | head -n -3 | awk '{print $1}' | xargs -r docker rmi -f
-                '''
+                // Remove old images to save space
+                sh "docker image prune -f"
             }
         }
     }
     
     post {
         success {
-            echo 'Deployment successful!'
+            echo "Deployment successful!"
         }
         failure {
-            echo 'Deployment failed!'
+            echo "Deployment failed!"
         }
     }
 }

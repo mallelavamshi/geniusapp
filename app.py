@@ -11,6 +11,16 @@ import ui
 import utils
 import config
 
+# Replace .env loading with direct environment variable access
+import os
+
+# Get API keys from environment
+api_keys = {
+    'IMGBB_API_KEY': os.getenv('IMGBB_API_KEY'),
+    'SEARCHAPI_API_KEY': os.getenv('SEARCHAPI_API_KEY'),
+    'ANTHROPIC_API_KEY': os.getenv('ANTHROPIC_API_KEY')
+}
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
